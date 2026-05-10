@@ -14,6 +14,11 @@
 // x3 -> 0
 // x4 -> 32 bit kernel entry point, _start location
 _start:
+    // halt cores 1-3, only core 0 continues
+    mrs     x5, mpidr_el1
+    and     x5, x5, #0x3
+    cbnz    x5, halt
+
     // set stack before our code
     ldr     x5, =_start
     mov     sp, x5
