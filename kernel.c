@@ -75,7 +75,7 @@ enum
 };
 
 // A Mailbox message with set clock rate of PL011 to 3MHz tag
-volatile unsigned int  __attribute__((aligned(16))) mbox[9] = {
+volatile uint32_t __attribute__((aligned(16))) mbox[9] = {
     9*4, 0, 0x38002, 12, 8, 2, 3000000, 0 ,0
 };
 
@@ -110,7 +110,7 @@ void uart_init(int raspi)
     // Set it to 3Mhz so that we can consistently set the baud rate
     if (raspi >= 3) {
         // UART_CLOCK = 30000000;
-        unsigned int r = (((unsigned int)(&mbox) & ~0xF) | 8);
+        uint32_t r = (((uint32_t)(uintptr_t)(&mbox) & ~0xFu) | 8u);
         // wait until we can talk to the VC
         while ( mmio_read(MBOX_STATUS) & 0x80000000 ) { }
         // send our message to property channel and wait for the response
@@ -134,14 +134,14 @@ void uart_init(int raspi)
     mmio_write(UART0_CR, (1 << 0) | (1 << 8) | (1 << 9));
 }
 
-void uart_putc(unsigned char c)
+void uart_putc(uint8_t c)
 {
     // Wait for UART to become ready to transmit.
     while ( mmio_read(UART0_FR) & (1 << 5) ) { }
     mmio_write(UART0_DR, c);
 }
 
-unsigned char uart_getc()
+uint8_t uart_getc()
 {
     // Wait for UART to have received something.
     while ( mmio_read(UART0_FR) & (1 << 4) ) { }
@@ -151,13 +151,13 @@ unsigned char uart_getc()
 void uart_puts(const char* str)
 {
     for (size_t i = 0; str[i] != '\0'; i ++)
-        uart_putc((unsigned char)str[i]);
+        uart_putc((uint8_t)str[i]);
 }
 
 void kernel_main(uint64_t dtb_ptr32, uint64_t x1, uint64_t x2, uint64_t x3)
 {
     uart_init(4);
-    uart_puts("Hello, kernel World!\r\n");
+    uart_puts("haiii chat :3\n");
 
     while (1)
         uart_putc(uart_getc());
