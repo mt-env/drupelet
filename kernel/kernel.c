@@ -1,6 +1,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "kernel/kernel.h"
+#include "lib/stdio.h"
+
 static uint64_t MMIO_BASE;
 
 // The MMIO area base address, depends on board type
@@ -136,12 +139,12 @@ void uart_init(int raspi)
 
 void uart_putc(uint8_t c)
 {
-    // Wait for UART to become ready to transmit.
-    while ( mmio_read(UART0_FR) & (1 << 5) ) { }
+    // Wait until the transmit FIFO has space.
+    while (mmio_read(UART0_FR) & (1 << 5)) { }
     mmio_write(UART0_DR, c);
 }
 
-uint8_t uart_getc()
+uint8_t uart_getc(void)
 {
     // Wait for UART to have received something.
     while ( mmio_read(UART0_FR) & (1 << 4) ) { }

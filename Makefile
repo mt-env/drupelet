@@ -2,10 +2,11 @@ CC      := clang
 QEMU    := qemu-system-aarch64
 
 CFLAGS  := -std=c11 -O2 -g3 -Wall -Wextra --target=aarch64-linux-gnu \
-           -fuse-ld=lld -fno-stack-protector -ffreestanding -nostdlib
+           -fuse-ld=lld -fno-stack-protector -ffreestanding -nostdlib \
+           -fno-builtin -I.
 LDFLAGS := -Wl,-Tlinker.ld -Wl,-Map=kernel.map
 
-SRCS    := boot/boot.S kernel/kernel.c
+SRCS    := boot/boot.S kernel/kernel.c lib/stdio.c
 TARGET  := kernel.elf
 
 .PHONY: all run clean
