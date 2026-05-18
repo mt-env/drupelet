@@ -83,6 +83,14 @@ el1_entry:
     ldr     x5, =_start
     mov     sp, x5
 
+    // Enable FP/SIMD at EL1/EL0. CPACR_EL1.FPEN = 0b11 (no traps). The
+    // AArch64 variadic-args ABI spills q0-q7 in the callee prologue, so
+    // any call to a variadic C function (e.g. kprintf) faults silently
+    // until this is set.
+    mov     x5, #(3 << 20)
+    msr     cpacr_el1, x5
+    isb
+
     // clear bss
     ldr     x5, =__bss_start
     ldr     w6, =__bss_size

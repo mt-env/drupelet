@@ -160,8 +160,8 @@ void uart_puts(const char* str)
 void kernel_main(uint64_t dtb_ptr32, uint64_t x1, uint64_t x2, uint64_t x3)
 {
     uart_init(4);
-    uart_puts("haiii chat :3\n");
+    kprintf("hello, world!\n");
+    PANIC("kernel panic!\n");
+    kprintf("unreachable code\n");
 
-    while (1)
-        uart_putc(uart_getc());
 }
