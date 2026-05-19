@@ -1,5 +1,6 @@
 /disk/*
 !/disk/.gitkeep
+/build/
 *.map
 *.tar
 *.o
@@ -7,3 +8,5 @@
 *.bin
 *.log
 *.pcap
+
+compile_commands.json
